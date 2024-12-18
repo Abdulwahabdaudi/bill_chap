@@ -17,14 +17,14 @@ class Customer {
   });
 }
 
-class CustomerPage extends StatefulWidget {
-  const CustomerPage({super.key});
+class CustomersScreen extends StatefulWidget {
+  const CustomersScreen({super.key});
 
   @override
-  _CustomerPageState createState() => _CustomerPageState();
+  _CustomerScreenState createState() => _CustomerScreenState();
 }
 
-class _CustomerPageState extends State<CustomerPage> {
+class _CustomerScreenState extends State<CustomersScreen> {
   // Dummy customer data (replace with your actual data source)
   final List<Customer> customers = [
     Customer(

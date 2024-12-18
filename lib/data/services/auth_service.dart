@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:outer_pos_app/helper/secure_storage.dart';
-import 'package:outer_pos_app/helper/shared_preferences.dart';
+import 'package:outer_pos_app/helpers/secure_storage.dart';
+import 'package:outer_pos_app/helpers/shared_preferences.dart';
 
 class AuthService {
   final String baseUrl = 'http://localhost:8000/api';

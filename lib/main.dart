@@ -1,14 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:outer_pos_app/pages/customer_page.dart';
-import 'package:outer_pos_app/pages/indicator.dart';
-import 'package:outer_pos_app/pages/landing_page.dart';
-import 'package:outer_pos_app/pages/login_page.dart';
-//import 'package:outer_pos_app/pages/landing_page.dart';
-import 'package:outer_pos_app/pages/register_page.dart';
-import 'package:outer_pos_app/pages/newsales.dart';
-import 'package:outer_pos_app/pages/product_page.dart';
-import 'package:outer_pos_app/pages/sales_page.dart';
-import 'package:outer_pos_app/services/auth_service.dart';
+import 'package:outer_pos_app/utils/app_routes.dart';
+import 'package:outer_pos_app/screens/land_screen.dart';
+import 'package:outer_pos_app/screens/login_screen.dart';
+import 'package:outer_pos_app/data/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import './providers/product_provider.dart';
+import './providers/cart_provider.dart';
+
+// // Main function to run the app
+void main() {
+ runApp(  
+ MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: OuterPosApp(),
+    ),
+    );
+}
+
+
+class OuterPosApp extends StatelessWidget {
+  OuterPosApp({super.key});
+
+   final AuthService _authService = AuthService();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: FutureBuilder(
+        future: _authService.isLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(); // Splash screen
+          }
+
+          return snapshot.data == true
+              ? const LandScreen() // Redirect to Home if logged in
+              : const LoginScreen(); // Redirect to Login otherwise
+        },
+      ),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+  routes: AppRoutes.getRoutes(),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // // Product List Screen
 // class ProductListScreen extends StatelessWidget {
@@ -356,50 +416,3 @@ import 'package:outer_pos_app/services/auth_service.dart';
 //   }
 // }
 
-// // Main function to run the app
-void main() {
-  runApp( OuterPosApp());
-}
-
-
-class OuterPosApp extends StatelessWidget {
-  OuterPosApp({super.key});
-
-   final AuthService _authService = AuthService();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FutureBuilder(
-        future: _authService.isLoggedIn(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // Splash screen
-          }
-
-          return snapshot.data == true
-              ? const LandingPage() // Redirect to Home if logged in
-              : const LoginPage(); // Redirect to Login otherwise
-        },
-      ),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Roboto',
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      routes: {
-        '/salesPage': (context) => const SalesPage(),
-        '/productPage': (context) => const ProductsPage(),
-        '/customerPage': (context) => const CustomerPage(),
-        '/newPage': (context) => const PosHomePage(),
-        '/loginPage': (context) => const LoginPage(),
-        '/registerPage': (context) => const RegisterPage(),
-        '/landingPage': (context) => const LandingPage(),
-        '/i': (context) =>  const LoadingIndicatorsShowcase(),
-      },
-    );
-  }
-}

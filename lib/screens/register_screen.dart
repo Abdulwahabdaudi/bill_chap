@@ -1,42 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../data/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:outer_pos_app/components/Loading_indicator.dart';
-import '../services/auth_service.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _storeController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   bool _loading = false;
 
   @override
   void dispose() {
+    _storeController.dispose();
+    _nameController.dispose();
     _phoneController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _loginUser() async {
+  Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _loading = true;
       });
 
       try {
-        final response = await _authService.login(
+        final response = await _authService.register(
+          _storeController.text,
+          _nameController.text,
           _phoneController.text,
+          _emailController.text,
           _passwordController.text,
           "Android",
         );
@@ -49,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacementNamed(context, '/landingPage');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Login Successful!'),
+              content: Text('Register Successful!'),
               backgroundColor: Colors.green,
             ),
           );
@@ -59,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
           _loading = false;
         });
 
-        String errorMessage = "Login failed."; 
+        String errorMessage = "Login failed.";
 
         if (e is PlatformException) {
           errorMessage =
@@ -97,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 // Header
                 Text(
-                  'Welcome Back',
+                  'Create Account',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,
@@ -106,11 +119,31 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Log in to continue',
+                  'Sign up to get started!',
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
+
+                // ShopName Input
+                TextFormField(
+                  controller: _storeController,
+                  decoration: InputDecoration(
+                    labelText: 'Shop Name',
+                    prefixIcon: Icon(Icons.store_outlined,
+                        color: Theme.of(context).colorScheme.primary),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your shop name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
 
                 // Phone Input
                 TextFormField(
@@ -135,6 +168,52 @@ class _LoginPageState extends State<LoginPage> {
                     }
                     if (value.length < 10) {
                       return 'Please enter your full phoneNumber';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Name Input
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Full Name',
+                    prefixIcon: Icon(Icons.person_outline,
+                        color: Theme.of(context).colorScheme.primary),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your full name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Email Input
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email Address',
+                    prefixIcon: Icon(Icons.email_outlined,
+                        color: Theme.of(context).colorScheme.primary),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    final emailRegex =
+                        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'Please enter a valid email';
                     }
                     return null;
                   },
@@ -167,46 +246,58 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return 'Please enter a password';
+                    }
+                    if (value.length < 8) {
+                      return 'Password must be at least 8 characters';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
 
-                //Forgot Password Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Forgot Password
-                    GestureDetector(
-                      onTap: () {
-                        // TODO: Implement forgot password navigation
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('Forgot Password Tapped'),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Forgot Password?',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
+                // Confirm Password Input
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  obscureText: !_isConfirmPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    prefixIcon: Icon(Icons.lock_outline,
+                        color: Theme.of(context).colorScheme.primary),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
+                      onPressed: () {
+                        setState(() {
+                          _isConfirmPasswordVisible =
+                              !_isConfirmPasswordVisible;
+                        });
+                      },
                     ),
-                  ],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != _passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
 
-                // Login Button
+                // Register Button
                 _loading
                     ? const LoadingIndicator()
                     : ElevatedButton(
-                        onPressed: _loginUser,
+                        onPressed: _register,
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
@@ -218,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         child: Text(
-                          'Login',
+                          'Register',
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -228,22 +319,22 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                         ),
                       ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
 
-                // Register Option
+                // Login Option
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Don\'t have an account? ',
+                      'Already have an account? ',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/registerPage');
+                        Navigator.pushNamed(context, '/loginPage');
                       },
                       child: Text(
-                        'Sign Up',
+                        'Login',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,

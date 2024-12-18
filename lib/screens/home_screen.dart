@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:outer_pos_app/helper/shared_preferences.dart';
+import 'package:outer_pos_app/helpers/shared_preferences.dart';
 
-class HomePage extends StatefulWidget {
-   const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+   const HomeScreen({super.key});
 
 
   @override
-  _OuterPosHomePageState createState() => _OuterPosHomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _OuterPosHomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
 
 
  String username = '';
@@ -108,14 +108,14 @@ class _OuterPosHomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildQuickActionButton('Sales', Icons.point_of_sale_outlined,
-                      Colors.green, '/salesPage'),
+                      Colors.green, '/salesScreen'),
                   _buildQuickActionButton(
                       'Products',
                       Icons.inventory_2_outlined,
                       Colors.orange,
-                      '/productPage'),
+                      '/productScreen'),
                   _buildQuickActionButton('Customers', Icons.person_2_outlined,
-                      Colors.purple, '/customerPage'),
+                      Colors.purple, '/customerScreen'),
                 ],
               ),
               const SizedBox(height: 20),
@@ -124,7 +124,7 @@ class _OuterPosHomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(15.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/newPage');
+                    Navigator.pushNamed(context, '/newScreen');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -206,10 +206,10 @@ class _OuterPosHomePageState extends State<HomePage> {
   }
 
   Widget _buildQuickActionButton(
-      String label, IconData icon, Color color, String page) {
+      String label, IconData icon, Color color, String screen) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushNamed(context, page);
+        Navigator.pushNamed(context, screen);
       },
       style: ElevatedButton.styleFrom(
         // backgroundColor: color,

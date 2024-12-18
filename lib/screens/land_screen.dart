@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:outer_pos_app/pages/cart_page.dart';
-import 'package:outer_pos_app/pages/home_page.dart';
-import 'package:outer_pos_app/pages/indicator.dart';
-//import 'package:outer_pos_app/pages/scan_page.dart';
-import '../services/auth_service.dart';
+import 'package:outer_pos_app/screens/cart_screen.dart';
+import 'package:outer_pos_app/screens/home_screen.dart';
+import 'package:outer_pos_app/components/indicator.dart';
+import '../data/services/auth_service.dart';
 
-//import 'package:outer_pos_app/pages/product_page.dart';
-//import 'package:outer_pos_app/pages/scan_page.dart';
 
-class LandingPage extends StatefulWidget {
-  const LandingPage({super.key});
+class LandScreen extends StatefulWidget {
+  const LandScreen({super.key});
 
   @override
-  State<LandingPage> createState() => _HomePageState();
+  State<LandScreen> createState() => _LandingScreenState();
 }
 
-class _HomePageState extends State<LandingPage> {
+class _LandingScreenState extends State<LandScreen> {
   final _authService = AuthService();
   int _index = 0;
 
@@ -26,8 +23,8 @@ class _HomePageState extends State<LandingPage> {
   }
 
   final List _pages = [
-     const HomePage(),
-    const ProductsPage(),
+     const HomeScreen(),
+    const CartScreen(),
     const LoadingIndicatorsShowcase(),
     //const ScanPage()
     //CartPage(),

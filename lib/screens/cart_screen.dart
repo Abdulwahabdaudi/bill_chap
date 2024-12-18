@@ -42,8 +42,8 @@ final List<Product> sampleProducts = [
   ),
 ];
 
-class ProductsPage extends StatelessWidget {
-  const ProductsPage({super.key});
+class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

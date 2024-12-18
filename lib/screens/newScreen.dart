@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PosHomePage extends StatelessWidget {
-  const PosHomePage({super.key});
+class PosHomeScreen extends StatelessWidget {
+  const PosHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

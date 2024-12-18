@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:outer_pos_app/helpers/api_helper.dart';
 
 class ProductService {
-  final String baseUrl = 'http://localhost:8000/api';
-
   Future<String> login(String phone, String password, String deviceName) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/product'),
+      ApiHelper.buildUri('/products'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',

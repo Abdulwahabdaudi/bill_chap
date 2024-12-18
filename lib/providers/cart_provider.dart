@@ -1,3 +1,65 @@
+
+import 'package:flutter/material.dart';
+import '../data/models/cart_item_model.dart';
+import '../data/services/api_service.dart';
+
+class CartProvider with ChangeNotifier {
+  List<CartItem> _cartItems = [];
+  final ApiService _apiService = ApiService();
+
+  List<CartItem> get cartItems => _cartItems;
+
+  Future<void> addToCart(int productId, int quantity) async {
+    await _apiService.post('cart/add', {'product_id': productId, 'quantity': quantity});
+    _cartItems.add(CartItem(productId: productId, quantity: quantity));
+    notifyListeners();
+  }
+
+  Future<void> fetchCart() async {
+    final response = await _apiService.get('cart');
+    _cartItems = (response as Map).entries
+        .map((entry) => CartItem(productId: int.parse(entry.key), quantity: entry.value))
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> clearCart() async {
+    await _apiService.post('cart/clear', {});
+    _cartItems.clear();
+    notifyListeners();
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import 'package:provider/provider.dart';
 
 

@@ -37,7 +37,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_native_splash: ^2.4.3
   provider: ^6.1.2
-  carousel_slider: ^5.0.0
   http: ^1.2.2
   flutter_secure_storage: ^9.2.2
   shared_preferences: ^2.3.3
@@ -99,7 +98,6 @@ flutter:
 
 flutter_native_splash:
   color: "#ffffff" # Background color
-  # image: assets/logo.png # Path to your logo
-  image: lib/image/Outer_pos_logo.png # Path to your logo
+  image: assets/images/Outer_pos_logo.png # Path to your logo
   android: true
   ios: true
