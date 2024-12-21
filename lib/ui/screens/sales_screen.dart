@@ -10,7 +10,7 @@ class SalesScreen extends StatelessWidget {
         title: const Text('Sales Dashboard'),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         foregroundColor: Colors.black,
       ),
       body: SingleChildScrollView(

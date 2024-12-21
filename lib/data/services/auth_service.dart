@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:outer_pos_app/helpers/secure_storage.dart';
 import 'package:outer_pos_app/helpers/shared_preferences.dart';
+import 'package:outer_pos_app/helpers/api_helper.dart';
 
 class AuthService {
-  final String baseUrl = 'http://localhost:8000/api';
 
   final _storage = SecureStorage();
 
   Future<String> login(String phone, String password, String deviceName) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/login'),
+      ApiHelper.buildUri('/login'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -25,19 +25,21 @@ class AuthService {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final token = data['token'];
-
       await _storage.saveToken(token);
       await saveUserData(data['user']['name']);
       return 'logged';
+    } else if (response.statusCode == 401) {
+      final data = json.decode(response.body);
+      return data['message'];
     } else {
-      throw Exception('Failed to login');
+      return 'Unexpected error occurred. Please try again later.';
     }
   }
 
   Future<String> register(String store, String name, String phone, String email,
       String password, String deviceName) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/register'),
+      ApiHelper.buildUri('/register'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -63,22 +65,22 @@ class AuthService {
             json.decode(response.body)['errors'];
 
         if (errors.containsKey('email')) {
-          print('Email error: ${errors['email'][0]}');
+          return 'Email error: ${errors['email'][0]}';
         }
 
         if (errors.containsKey('phone')) {
-          print('Password error: ${errors['phone'][0]}');
+          return 'Phone error: ${errors['phone'][0]}';
         }
       }
 
-      throw Exception('Failed to register');
+       return 'Unexpected error occurred. Please try again later.';
     }
   }
 
   Future<void> logout() async {
     final token = await _storage.getToken();
     final response = await http.post(
-      Uri.parse('$baseUrl/logout'),
+      ApiHelper.buildUri('/logout'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -86,6 +88,7 @@ class AuthService {
 
     if (response.statusCode == 200) {
       await _storage.deleteToken();
+      await logoutUser();
     } else {
       throw Exception('Failed to logout');
     }
@@ -94,7 +97,7 @@ class AuthService {
   Future<Map<String, dynamic>> fetchUser() async {
     final token = await _storage.getToken();
     final response = await http.get(
-      Uri.parse('$baseUrl/user'),
+      ApiHelper.buildUri('/user'),
       headers: {
         'Authorization': 'Bearer $token',
       },

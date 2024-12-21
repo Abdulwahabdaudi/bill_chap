@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:outer_pos_app/helpers/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
-   const HomeScreen({super.key});
-
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
- String username = '';
+  String username = '';
 
   @override
   void initState() {
@@ -21,12 +18,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadUsername() async {
-     Map<String, String> userData = await getUserData();
+    Map<String, String> userData = await getUserData();
     setState(() {
       username = userData['name']!;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
-                  // Welcome Message
                   Text(
-                   'Welcome $username !',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    'Welcome $username !',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
                   // Card with Gradient Header
                   Card(
-                    elevation: 4,
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -58,29 +53,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         // Gradient Header
                         Container(
                           width: double.infinity,
+                          height: 150,
                           padding: const EdgeInsets.all(16.0),
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                 Colors.blue,
-                                Colors.blueAccent
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
+                          decoration:  BoxDecoration(
+                            // gradient: LinearGradient(
+                            //   colors: [Colors.blue, Colors.blueAccent],
+                            //   begin: Alignment.topLeft,
+                            //   end: Alignment.bottomRight,
+                            // ),
+                            borderRadius: BorderRadius.circular(15)
                           ),
-                          child: const Column(
+                          child:  Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 "Empowering your business,",
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.white70,
+                                  color:  Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                               Text(
@@ -88,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color:  Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                             ],
@@ -124,14 +114,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(15.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/newScreen');
+                    Navigator.pushNamed(context, '/cartScreen');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor:  Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icon(Icons.add_shopping_cart, color: Colors.white),
                       SizedBox(height: 4),
                       Text(
-                        'New Sales',
+                        'Create New Bill',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12,
@@ -151,16 +142,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               // Recent Transactions
-            //   Text(
-            //     'Recent Transactions',
-            //     style: TextStyle(
-            //       fontSize: 18,
-            //       fontWeight: FontWeight.bold,
-            //     ),
-            //   ),
-            //   SizedBox(height: 10),
-            //   _buildRecentTransactionsList(),
-             ],
+              //   Text(
+              //     'Recent Transactions',
+              //     style: TextStyle(
+              //       fontSize: 18,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              //   SizedBox(height: 10),
+              //   _buildRecentTransactionsList(),
+            ],
           ),
         ),
       ),
@@ -220,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Column(
         children: [
-          Icon(icon, color: Colors.blue),
+          Icon(icon, color:  Theme.of(context).colorScheme.primary),
           const SizedBox(height: 4),
           Text(
             label,

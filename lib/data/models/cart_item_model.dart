@@ -1,6 +1,13 @@
-class CartItem {
-  final int productId;
-  final int quantity;
+import 'package:outer_pos_app/data/models/product_model.dart';
 
-  CartItem({required this.productId, required this.quantity});
+class CartItem {
+  final Product product;
+  int quantity;
+
+  CartItem({
+    required this.product,
+    this.quantity = 1,
+  });
+
+  double get total => product.sellingPrice * quantity;
 }

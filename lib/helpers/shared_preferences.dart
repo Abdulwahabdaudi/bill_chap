@@ -11,3 +11,8 @@ Future<Map<String, String>> getUserData() async {
     'name': prefs.getString('name') ?? '',
   };
 }
+
+Future<void> logoutUser() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear(); // or prefs.remove('name');
+}

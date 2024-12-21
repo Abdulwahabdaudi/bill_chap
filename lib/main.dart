@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:outer_pos_app/utils/app_routes.dart';
-import 'package:outer_pos_app/screens/land_screen.dart';
-import 'package:outer_pos_app/screens/login_screen.dart';
+import 'package:outer_pos_app/ui/screens/land_screen.dart';
+import 'package:outer_pos_app/ui/screens/login_screen.dart';
 import 'package:outer_pos_app/data/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import './providers/product_provider.dart';
@@ -9,32 +9,36 @@ import './providers/cart_provider.dart';
 
 // // Main function to run the app
 void main() {
- runApp(  
- MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
       child: OuterPosApp(),
     ),
-    );
+  );
 }
-
 
 class OuterPosApp extends StatelessWidget {
   OuterPosApp({super.key});
 
-   final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Bill Chap',
       home: FutureBuilder(
         future: _authService.isLoggedIn(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // Splash screen
+            return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
           }
 
           return snapshot.data == true
@@ -48,7 +52,7 @@ class OuterPosApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-  routes: AppRoutes.getRoutes(),
+      routes: AppRoutes.getRoutes(),
     );
   }
 }
